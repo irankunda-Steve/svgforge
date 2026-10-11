@@ -71,4 +71,30 @@ describe('testing shapes', () => {
     expect(dom.documentElement.getAttribute('height')).toBe(dimension.height.toString());
     expect(dom.documentElement.getAttribute('width')).toBe(dimension.width.toString());
   });
+
+  it('should skip a shape whose dimensions cannot be calculated instead of emitting NaN viewBox values', async () => {
+    expect.hasAssertions();
+
+    const spriter = new SVGSpriter({
+      shape: {
+        dest: 'svg',
+        dimension: {
+          maxWidth: 4000,
+          maxHeight: 4000,
+        },
+      },
+    });
+
+    mockCalc.mockImplementationOnce(() => {
+      throw new Error('Dimension calculation failed');
+    });
+
+    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/46x46.svg');
+    spriter.add(svgFilePath, '46x46.svg', Buffer.from(TEST_SVG));
+
+    const {result} = await spriter.compileAsync();
+
+    expect(result).toBeInstanceOf(Object);
+    expect(result.shapes).toStrictEqual([]);
+  });
 });

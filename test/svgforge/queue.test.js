@@ -3,6 +3,7 @@ import {EventEmitter} from 'node:events';
 import path from 'node:path';
 import File from 'vinyl';
 import SVGSpriterQueue from '../../lib/svgforge/queue.js';
+import DimensionsCalculationError from '../../lib/svgforge/errors/dimensions-calculation-error.js';
 import {setDependency} from '../../lib/deps.js';
 import {
   beforeEach,
@@ -76,10 +77,15 @@ describe('testing Queue', () => {
     let spriter;
     let queue;
 
-    const TEST_SHAPE = {TEST: 'shape'};
+    const TEST_SHAPE = {id: 'test-shape'};
 
     beforeEach(() => {
-      spriter = {debug: createMock(), _shapes: []};
+      spriter = {
+        debug: createMock(),
+        error: createMock(),
+        warn: createMock(),
+        _shapes: [],
+      };
       queue = new SVGSpriterQueue(spriter);
     });
 
@@ -91,12 +97,32 @@ describe('testing Queue', () => {
       expect(spriter._shapes).toStrictEqual([TEST_SHAPE]);
     });
 
-    it('should not add shape to spriter if there is an error', () => {
+    it('should not add shape to spriter, log the error and announce the skip if processing fails', () => {
       expect.hasAssertions();
 
-      queue.remove(new Error('test'), undefined);
+      const TEST_ERROR = new Error('test');
+      const onSkipped = createMock();
+      queue.on('shape-skipped', onSkipped);
+      queue.remove(TEST_ERROR, TEST_SHAPE);
 
       expect(spriter._shapes).toStrictEqual([]);
+      expect(spriter.error).toHaveBeenCalledWith('Skipping "%s" (%s)', TEST_SHAPE.id, TEST_ERROR.message);
+      expect(spriter._errorSkipped).toBe(1);
+      expect(onSkipped).toHaveBeenCalledWith({file: TEST_SHAPE.id, error: TEST_ERROR});
+    });
+
+    it('should not add shape to spriter, log a warning with the install hint and count the skip if dimension calculation failed', () => {
+      expect.hasAssertions();
+
+      const TEST_ERROR = new DimensionsCalculationError('not installed — run `npm install @resvg/resvg-js`');
+      const onSkipped = createMock();
+      queue.on('shape-skipped', onSkipped);
+      queue.remove(TEST_ERROR, TEST_SHAPE);
+
+      expect(spriter._shapes).toStrictEqual([]);
+      expect(spriter.warn).toHaveBeenCalledWith('Skipping "%s" (%s)', TEST_SHAPE.id, TEST_ERROR.message);
+      expect(spriter._dimensionSkipped).toBe(1);
+      expect(onSkipped).toHaveBeenCalledWith({file: TEST_SHAPE.id, error: TEST_ERROR});
     });
 
     it('should emit "remove" if active count is more than 1', () => {
@@ -129,6 +155,7 @@ describe('testing Queue', () => {
         debug: createMock(),
         _limit: 10,
         error: createMock(),
+        warn: createMock(),
         _transformShape: createMock().mockImplementation((shape, cb) => cb(null)),
       };
       queue = new SVGSpriterQueue(spriter);
@@ -202,6 +229,8 @@ describe('testing Queue', () => {
 
         expect(queue.active).toBe(2);
         expect(spriter.error).toHaveBeenCalledWith('Skipping "%s" (%s)', 'file', TEST_ERROR_MESSAGE);
+        expect(spriter._errorSkipped).toBe(1);
+        expect(queue.emit).toHaveBeenCalledWith('shape-skipped', {file: 'file', error: expect.any(Error)});
         expect(queue.emit).toHaveBeenCalledWith('remove');
       });
 

@@ -1,3 +1,7 @@
+autoInstallPeers: false
 allowBuilds:
   playwright-chromium: true
   unrs-resolver: true
+peerDependencyRules:
+  ignoreMissing:
+    - '@resvg/resvg-js'

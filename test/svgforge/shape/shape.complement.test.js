@@ -65,19 +65,35 @@ describe('testing _complementDimensions()', () => {
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const cb = jest.fn();
-    const testSetDimensions = jest.fn();
 
     shape.width = 0;
     shape.height = 0;
-    jest.spyOn(shape, '_determineDimensions');
-    shape._setDimensions = {
-      bind: jest.fn().mockReturnValueOnce(testSetDimensions),
-    };
+    jest.spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(null));
+    jest.spyOn(shape, '_setDimensions');
 
     shape._complementDimensions(cb);
 
-    expect(shape._setDimensions.bind).toHaveBeenCalledWith(shape, cb);
-    expect(shape._determineDimensions).toHaveBeenCalledWith(testSetDimensions);
+    expect(shape._determineDimensions).toHaveBeenCalledTimes(1);
+    expect(shape._setDimensions).toHaveBeenCalledWith(cb);
+  });
+
+  it('should call the callback with an error and skip _setDimensions if dimension determination fails', () => {
+    expect.hasAssertions();
+
+    const shape = createShape(TEST_FILE, TEST_SPRITER);
+    const cb = jest.fn();
+    const TEST_ERROR = new Error('dimension calculation failed');
+
+    shape.width = 0;
+    shape.height = 0;
+    jest.spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(TEST_ERROR));
+    jest.spyOn(shape, '_setDimensions');
+
+    shape._complementDimensions(cb);
+
+    expect(shape._determineDimensions).toHaveBeenCalledTimes(1);
+    expect(shape._setDimensions).not.toHaveBeenCalled();
+    expect(cb).toHaveBeenCalledWith(TEST_ERROR);
   });
 });
 

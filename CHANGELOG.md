@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Newer release notes are published on the GitHub release page: <https://github.com/svgforge/svgforge/releases>
 
+## Unreleased
+
+### Added
+
+* `isResvgAvailable()` — exported from the `utils` entry point — reports whether the `@resvg/resvg-js` dimension fallback is installed and usable in the current runtime.
+* New **`shape-skipped`** spriter event — emitted with `{file, error}` whenever a shape is skipped, no matter the reason (missing dimensions or a processing error such as invalid SVG/XML), so consumers can react programmatically instead of relying on log output alone.
+
+### Changed
+
+* `@resvg/resvg-js` is now declared as a **peer dependency** (installed automatically by default) instead of a regular dependency — no action required. Making it an *optional* peer (never installed automatically) is planned for the next major release; see [docs/TODO.md](docs/TODO.md).
+
+### Fixed
+
+* Shapes whose dimensions cannot be determined (no `width`/`height`/`viewBox` and no `@resvg/resvg-js`, or a failed render) are now **skipped from the sprite with a logged warning** that carries the install command for the `@resvg/resvg-js` package, instead of being included with invalid `NaN` viewBox values — the error from the dimension calculation is no longer swallowed by the shape complement flow.
+
+* Invalid SVG/XML input now reports the actual parser reason — e.g. `Invalid SVG file (Opening and ending tag mismatch: "rect" != "svg")` — instead of xmldom's `Reporting fatalError "…" caused …` wrapper. The XML fixer no longer writes raw `[xmldom fatalError] …` lines to the console, and the offending shape is skipped while the remaining shapes are still compiled into the sprite.
+
 ## 3.0.0 — Vento templating, dependency modernization
 
 ### Added

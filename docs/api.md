@@ -84,6 +84,19 @@ spriter.on('progress', ({processed, total}) => {
 });
 ```
 
+* **`shape-skipped`** `{file: string, error: Error}` — Emitted whenever a shape is **skipped**, so consumers can react programmatically instead of relying on the configured logger alone. `file` is the shape name, `error` the underlying error. There are two reasons for a skip:
+
+  * **Missing/undeterminable dimensions** (a warning) — e.g. an SVG without `width`/`height`/`viewBox` attributes when the [`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js) dimension fallback is not installed. The error message carries the install command for the fallback and the spriter logs a **warning**.
+  * **Any other processing error** (a hard error) — e.g. a file that is not valid SVG/XML. The spriter logs an **error** carrying the parser reason.
+
+  Either way the build continues with the remaining shapes, which are the only ones written to the sprite:
+
+```js
+spriter.on('shape-skipped', ({file, error}) => {
+  console.warn(`Skipping "${file}" (${error.message})`);
+});
+```
+
 #### SVGSpriter.add(file [, name, svg ])
 
 **Registration of an SVG file** — Before compilation, you'll need to register one or more SVG files for processing. As *svgforge* doesn't read the files from the disk itself, you'll have to pass both the path and the file contents explicitly. Alternatively, you may pass a [vinyl](https://github.com/gulpjs/vinyl) file object as the first argument to `.add()`, which comes in handy when piping resources from one process to another. Please [see below](#example-using-glob-and-vinyl) for an example.
