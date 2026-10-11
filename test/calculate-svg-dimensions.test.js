@@ -101,4 +101,18 @@ describe('calculateSvgDimensions', () => {
       resetDependencies();
     }
   });
+
+  it('should throw error if the optional package is not installed', () => {
+    expect.hasAssertions();
+
+    setDependency('@resvg/resvg-js', {});
+
+    try {
+      expect(() => {
+        calculateSvgDimensions('');
+      }).toThrow(/not installed/u);
+    } finally {
+      resetDependencies();
+    }
+  });
 });

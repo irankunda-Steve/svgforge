@@ -55,7 +55,6 @@
     "test:watch": "node --test --watch"
   },
   "dependencies": {
-    "@resvg/resvg-js": "^2.6.2",
     "@xmldom/xmldom": "^0.9.12",
     "css-selector-parser": "^3.3.0",
     "css-tree": "^3.2.1",
@@ -64,6 +63,9 @@
     "svgo": "^4.1.0",
     "ventojs": "^2.4.1",
     "vinyl": "^3.0.1"
+  },
+  "peerDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
   },
   "devDependencies": {
     "eslint-plugin-jsdoc": "^64.5.4",

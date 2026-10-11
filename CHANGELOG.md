@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Newer release notes are published on the GitHub release page: <https://github.com/svgforge/svgforge/releases>
 
+## Unreleased
+
+### Changed
+
+* `@resvg/resvg-js` is now declared as a **peer dependency** (installed automatically by default) instead of a regular dependency — no action required. Making it an *optional* peer (never installed automatically) is planned for the next major release; see [docs/TODO.md](docs/TODO.md).
+
 ## 3.0.0 — Vento templating, dependency modernization
 
 ### Added

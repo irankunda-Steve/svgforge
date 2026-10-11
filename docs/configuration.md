@@ -112,6 +112,11 @@ Property         | Type      | Default     | Description                |
 `shape.dimension.precision`  | Integer   | `2`       | Precision (number of decimal places) for dimension calculations |
 `shape.dimension.attributes` | Boolean   | `false`     | Whether to add `width` and `height` attributes to embedded shapes («defs» and «stack» mode only) |
 
+SVGs without `width`/`height` or `viewBox` attributes need the optional
+[`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js) package to have their
+dimensions determined. The package is **never installed automatically** — install it
+explicitly when your icon set contains such SVGs.
+
 
 #### Shape spacing
 
