@@ -144,6 +144,19 @@ describe('testing Queue', () => {
 
       expect(queue.emit).toHaveBeenCalledWith('empty');
     });
+
+    it('should emit "remove" while another file is still waiting (limit 1)', () => {
+      expect.hasAssertions();
+
+      queue.active = 1;
+      queue._files = [1];
+      spyOn(queue, 'emit');
+      queue.remove(null, TEST_SHAPE);
+
+      expect(queue.active).toBe(0);
+      expect(queue.emit).toHaveBeenCalledWith('remove');
+      expect(queue.emit).not.toHaveBeenCalledWith('empty');
+    });
   });
 
   describe('testing process()', () => {
@@ -240,7 +253,12 @@ describe('testing Queue', () => {
         const TEST_FILE = new File({path: '/base/file', base: '/base/'});
         queue._files = [1];
         queue.active = 0;
-        spyOn(queue._files, 'shift').mockReturnValueOnce(TEST_FILE);
+        // `shift()` is stubbed here, so drain the queue explicitly: `empty`
+        // may only be emitted once no file is waiting anymore.
+        spyOn(queue._files, 'shift').mockImplementation(() => {
+          queue._files.length = 0;
+          return TEST_FILE;
+        });
         spyOn(queue, 'emit');
         mockShape.mockImplementation(() => {
           throw new Error('test');

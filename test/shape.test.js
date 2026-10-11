@@ -59,10 +59,11 @@ describe('testing shapes', () => {
 
     spriter.add(svgFilePath, svg, Buffer.from(TEST_SVG));
 
-    expect(mockCalc).toHaveBeenCalledWith(new DOMParser().parseFromString(`<?xml version="1.0" encoding="utf-8"?>${TEST_SVG}`, 'image/svg+xml').toString());
-
     const {result} = await spriter.compileAsync();
 
+    // Shape transformations may complete asynchronously (e.g. worker-thread
+    // optimization), so assert on the dimension call only after processing.
+    expect(mockCalc).toHaveBeenCalledWith(new DOMParser().parseFromString(`<?xml version="1.0" encoding="utf-8"?>${TEST_SVG}`, 'image/svg+xml').toString());
     expect(result).toBeInstanceOf(Object);
     expect(result.shapes).toBeInstanceOf(Array);
 
