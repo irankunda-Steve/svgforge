@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Newer release notes are published on the GitHub release page: <https://github.com/svgforge/svgforge/releases>
 
-## Unreleased
+## 3.1.0 — Parallel SVGO optimization, resilient shape skipping
 
 ### Added
 
