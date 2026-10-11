@@ -54,11 +54,59 @@ Call sites to convert:
 * `lib/svgforge/shape/dimensions.js` (`_determineDimensions`), via a promise-returning
   `calculateSvgDimensions()`.
 * `svgforge-cli/bin/svgforge.js`: `await isResvgAvailable()` for the `resvg` summary row.
-* Tests: `test/calculate-svg-dimensions.test.js`,
-  `test/svgforge/shape/shape.complement.test.js`, `test/shape.test.js`,
+* Tests: `test/svgforge/utils/calculate-svg-dimensions.test.js`,
+  `test/svgforge/shape/shape.complement.test.js`,
+  `test/svgforge/spriter.dimensions.test.js`,
   `test/svgforge/minimal-configuration/modes/{defs,symbol,stack}.test.js` (the
   `describe`-body self-skip has to be awaited or moved) and
   `test/svgforge/shape/shape.dimension-fallback.test.js`.
 
 Side note: a literal `import('@resvg/resvg-js')` is statically visible to bundlers, which
 then try to resolve the optional package; the `createRequire` form stays opaque to them.
+
+## 3.2.0 — Retire the test harness shim in favour of plain `node:test`
+
+`test/helpers/harness.js` is the last piece of Jest-shaped infrastructure: it provides an
+`expect()` API, a `.snap.json` snapshot store, `createMock()`/`spyOn()` and the custom
+visual/logger matchers. It works on top of `node:test`, but it is hand-maintained and the
+one place where "Jest" still shows up conceptually.
+
+This is **internal only**: `test/` is not part of the published package (`package.json`
+`files` lists `lib/` and `tmpl/`), so removing the shim is *not* a breaking change and does
+not need a major release. It is planned for the next minor (**3.2.0**). The work itself is
+still substantial, though:
+
+* ~650 `expect(...)` assertions → `node:assert/strict` (`assert.strictEqual`,
+  `assert.deepStrictEqual`, `assert.throws`, `assert.ok`, …).
+* ~180 mocks (`createMock()`/`spyOn()`) → `node:test`'s `mock.fn()` / `mock.method()`.
+  The one-shot chaining (`mockReturnValueOnce`, `mockImplementationOnce`) has to become
+  explicit call sequences, because node:test has no one-shot return values.
+* The asymmetric matchers (`expect.any`, `expect.objectContaining`,
+  `expect.stringContaining`, …) have no `node:assert` equivalent and need small predicate
+  helpers.
+* The four `toMatchSnapshot()` calls (minimal-configuration modes) → `t.assert.snapshot()`,
+  which requires the test callback to receive the test context (`it('…', t => …)`).
+* The three custom matchers (`toBeVisuallyEqualTo`, `toBeVisuallyCorrectAsHTMLTo`,
+  `toBeDefaultLogger`) → plain async assertion helpers.
+
+Best done once the suite is otherwise stable; the visual tests are the riskiest part.
+
+## 4.x — Library style cleanups
+
+Smaller internal cleanups that do not warrant a major release on their own but fit a
+breaking pass:
+
+* Replace the `.call(this)`-style delegation of module functions (e.g.
+  `lib/svgforge/shape/index.js` forwarding to `initSvg`/`dimensions`, and `mode/base.js`
+  calling `buildCSSResources`/`buildHTMLExample`) with real methods, inheritance or
+  explicit composition.
+* Drop the `arguments.length`-based optional-argument detection (`lib/svgforge.js`) in
+  favour of explicit `undefined` checks, so the signatures read the same in JavaScript and
+  TypeScript.
+* Settle on a single privacy convention: the classes currently mix `_`-prefixed members
+  with `#`-private ones. Prefer `#` for new code and convert the remaining `_` members
+  where it is safe.
+* Move the shape/queue processing core to `async`/`await` (the callback-based
+  `new Promise` wrappers in `lib/svgforge.js`, `utils/index.js` and
+  `transform/svgo-pool.js`); this is the same change that unblocks the lazy `import()`
+  item above.

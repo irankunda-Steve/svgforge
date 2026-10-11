@@ -5,8 +5,8 @@ import {
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  spyOn,
+} from '../../helpers/harness.js';
 
 class TestError extends Error {}
 
@@ -22,7 +22,7 @@ describe('svg-sprite: errors', () => {
         symbol: true,
       },
     });
-    jest.spyOn(spriter, '_layout').mockImplementation((_, cb) => {
+    spyOn(spriter, '_layout').mockImplementation((_, cb) => {
       cb(new TestError(), {}, {});
     });
   });

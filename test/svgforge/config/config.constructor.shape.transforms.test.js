@@ -1,11 +1,11 @@
 
 import SVGSpriterConfig from '../../../lib/svgforge/config.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 describe('testing SVGSpriterConfig shape.transforms', () => {
   const DEFAULT_TRANSFORMS = [['svgo', {}]];
@@ -63,8 +63,8 @@ describe('testing SVGSpriterConfig shape.transforms', () => {
     expect.hasAssertions();
 
     const TEST_TRANSFORMS = [
-      jest.fn(),
-      jest.fn(),
+      createMock(),
+      createMock(),
     ];
     const TEST_TRANSFORMS_COPY = [...TEST_TRANSFORMS];
     const config = new SVGSpriterConfig({shape: {transform: TEST_TRANSFORMS}});
@@ -80,8 +80,8 @@ describe('testing SVGSpriterConfig shape.transforms', () => {
 
     const TEST_TRANSFORM_CONFIG = {TEST: 2};
     const TEST_TRANSFORMS = [{
-      TEST: jest.fn(),
-      TEST_THAT_SHOULD_NOT_INCLUDED: jest.fn(),
+      TEST: createMock(),
+      TEST_THAT_SHOULD_NOT_INCLUDED: createMock(),
     }, {
       TEST_2: TEST_TRANSFORM_CONFIG,
     }];

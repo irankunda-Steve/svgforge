@@ -1,11 +1,11 @@
 
 import SVGSpriterConfig from '../../../lib/svgforge/config.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 describe('testing svg SVGSpriterConfig.constructor', () => {
   it('should merge config.svg', () => {
@@ -132,7 +132,7 @@ describe('testing svg SVGSpriterConfig.constructor', () => {
     it('should fill with functions if provided', () => {
       expect.hasAssertions();
 
-      const TEST_TRANSFORMS = [jest.fn(), jest.fn()];
+      const TEST_TRANSFORMS = [createMock(), createMock()];
       const config = new SVGSpriterConfig({svg: {transform: TEST_TRANSFORMS}});
 
       expect(config.svg.transform).toStrictEqual(TEST_TRANSFORMS);
@@ -150,7 +150,7 @@ describe('testing svg SVGSpriterConfig.constructor', () => {
     it('should set array of provided function', () => {
       expect.hasAssertions();
 
-      const TEST_TRANSFORM = jest.fn();
+      const TEST_TRANSFORM = createMock();
       const config = new SVGSpriterConfig({svg: {transform: TEST_TRANSFORM}});
 
       expect(config.svg.transform).toStrictEqual([TEST_TRANSFORM]);

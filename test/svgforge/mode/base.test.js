@@ -10,23 +10,24 @@ import SVGSpriteBase from '../../../lib/svgforge/mode/base.js';
 import {setDependency, resetDependencies} from '../../../lib/deps.js';
 import {
   afterEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  restoreAllMocks,
+} from '../../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreAllMocks();
   resetDependencies();
 });
 
 describe('testings SVGSpriteBase', () => {
   const TEST_MODE_NAME = 'base';
   const getClassAndInitFn = () => {
-    const initFn = jest.fn();
+    const initFn = createMock();
     return {
       cls: class TestMode extends SVGSpriteBase {
         // Polymorphic hook (overridden or dispatched cross-class); `#private` would break dispatch.
@@ -54,7 +55,7 @@ describe('testings SVGSpriteBase', () => {
             spacing: [],
           },
         },
-        debug: jest.fn(),
+        debug: createMock(),
       };
       const TEST_CONFIG = {
         dest: '.',
@@ -97,7 +98,7 @@ describe('testings SVGSpriteBase', () => {
               spacing: [],
             },
           },
-          debug: jest.fn(),
+          debug: createMock(),
         };
         const TEST_CONFIG = {
           dest: '.',
@@ -160,7 +161,7 @@ describe('testings SVGSpriteBase', () => {
             spacing: [],
           },
         },
-        debug: jest.fn(),
+        debug: createMock(),
       };
       const TEST_CONFIG = {
         dest: '.',
@@ -188,7 +189,7 @@ describe('testings SVGSpriteBase', () => {
               spacing: [],
             },
           },
-          debug: jest.fn(),
+          debug: createMock(),
         };
         const TEST_CONFIG = {
           dest: '.',
@@ -218,7 +219,7 @@ describe('testings SVGSpriteBase', () => {
               spacing: [],
             },
           },
-          debug: jest.fn(),
+          debug: createMock(),
         };
         const TEST_CONFIG = {
           dest: '.',
@@ -256,8 +257,8 @@ describe('testings SVGSpriteBase', () => {
           },
         },
         _limit: 100,
-        debug: jest.fn(),
-        verbose: jest.fn(),
+        debug: createMock(),
+        verbose: createMock(),
       };
       const TEST_CONFIG = {
         dest: '.',
@@ -269,8 +270,8 @@ describe('testings SVGSpriteBase', () => {
       const base = new cls(TEST_SPRITER, TEST_CONFIG, {}, '');
 
       const TEST_FILES = {};
-      const testFn = jest.fn();
-      setDependency('template:render', jest.fn().mockResolvedValueOnce('first').mockResolvedValueOnce('second').mockResolvedValueOnce(''));
+      const testFn = createMock();
+      setDependency('template:render', createMock().mockResolvedValueOnce('first').mockResolvedValueOnce('second').mockResolvedValueOnce(''));
 
       base._buildCSSResources(TEST_FILES, testFn);
 
@@ -307,8 +308,8 @@ describe('testings SVGSpriteBase', () => {
           },
         },
         _limit: 100,
-        debug: jest.fn(),
-        verbose: jest.fn(),
+        debug: createMock(),
+        verbose: createMock(),
       };
       const TEST_CONFIG = {
         dest: '.',
@@ -320,10 +321,10 @@ describe('testings SVGSpriteBase', () => {
       };
       const {cls} = getClassAndInitFn();
       const base = new cls(TEST_SPRITER, TEST_CONFIG, {}, '');
-      const testFn = jest.fn();
+      const testFn = createMock();
       const TEST_FILES = {};
 
-      setDependency('template:render', jest.fn().mockResolvedValueOnce('test example'));
+      setDependency('template:render', createMock().mockResolvedValueOnce('test example'));
       base._buildHTMLExample(TEST_FILES, testFn);
 
       await new Promise(setImmediate);
@@ -392,8 +393,8 @@ describe('testings SVGSpriteBase', () => {
           },
         },
         _limit: 100,
-        debug: jest.fn(),
-        verbose: jest.fn(),
+        debug: createMock(),
+        verbose: createMock(),
       };
       const TEST_CONFIG = {
         dest: '.',

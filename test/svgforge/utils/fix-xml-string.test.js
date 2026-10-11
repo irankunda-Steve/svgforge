@@ -1,7 +1,7 @@
 
-import fixXMLString from '../lib/svgforge/utils/fix-xml-string.js';
-import XmlFixingError from '../lib/svgforge/errors/xml-fixing-error.js';
-import {describe, expect, it} from './helpers/jest-compat.js';
+import fixXMLString from '../../../lib/svgforge/utils/fix-xml-string.js';
+import XmlFixingError from '../../../lib/svgforge/errors/xml-fixing-error.js';
+import {describe, expect, it} from '../../helpers/harness.js';
 
 describe('testing fixing svg string', () => {
   it('should return valid svg file on svg with one multiline attribute values', () => {

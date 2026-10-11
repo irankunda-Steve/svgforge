@@ -4,11 +4,12 @@ import File from 'vinyl';
 import {XMLSerializer} from '@xmldom/xmldom';
 import createShape from '../../../lib/svgforge/shape/index.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  spyOn,
+} from '../../helpers/harness.js';
 
 const TEST_SPRITER = {
   config: {
@@ -19,7 +20,7 @@ const TEST_SPRITER = {
       doctypeDeclaration: '',
     },
   },
-  verbose: jest.fn(),
+  verbose: createMock(),
 };
 const TEST_FILE = new File({
   contents: Buffer.from('<svg></svg>'),
@@ -33,7 +34,7 @@ describe('testing getSVG()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    jest.spyOn(shape.dom.documentElement, 'cloneNode');
+    spyOn(shape.dom.documentElement, 'cloneNode');
 
     shape.getSVG();
 
@@ -45,7 +46,7 @@ describe('testing getSVG()', () => {
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_NODE = shape.dom.createElementNS(shape.DEFAULT_SVG_NAMESPACE, 'svg');
-    jest.spyOn(shape, '_stripInlineNamespaceDeclarations').mockReturnValueOnce(TEST_NODE);
+    spyOn(shape, '_stripInlineNamespaceDeclarations').mockReturnValueOnce(TEST_NODE);
 
     expect(shape.getSVG(true)).toBe(new XMLSerializer().serializeToString(TEST_NODE));
   });
@@ -54,7 +55,7 @@ describe('testing getSVG()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const testFn = jest.fn();
+    const testFn = createMock();
 
     shape.getSVG(false, testFn);
 
@@ -66,7 +67,7 @@ describe('testing getSVG()', () => {
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_NODE = shape.dom.createElementNS(shape.DEFAULT_SVG_NAMESPACE, 'svg');
-    jest.spyOn(shape, '_stripInlineNamespaceDeclarations').mockReturnValueOnce(TEST_NODE);
+    spyOn(shape, '_stripInlineNamespaceDeclarations').mockReturnValueOnce(TEST_NODE);
 
     expect(shape.getSVG(true)).toBe(new XMLSerializer().serializeToString(TEST_NODE));
   });
@@ -86,7 +87,7 @@ describe('testing getSVG()', () => {
           xmlDeclaration: true,
         },
       },
-      verbose: jest.fn(),
+      verbose: createMock(),
     });
     shape.doctypeDeclaration = TEST_DOCTYPE_DECLARATION;
     shape.xmlDeclaration = TEST_XML_DECLARATION;
@@ -118,9 +119,9 @@ describe('testing getSVG()', () => {
           view: true,
         },
       },
-      verbose: jest.fn(),
+      verbose: createMock(),
     });
-    shape.complement(jest.fn);
+    shape.complement(createMock);
     shape.setNamespace('ns-');
 
     expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" id="someprefix-ns-abc" height="100" width="100" viewBox="0 0 100 100"><use href="#someprefix-ns-abc"/></svg>');
@@ -149,9 +150,9 @@ describe('testing getSVG()', () => {
           view: true,
         },
       },
-      verbose: jest.fn(),
+      verbose: createMock(),
     });
-    shape.complement(jest.fn);
+    shape.complement(createMock);
     shape.setNamespace('ns-');
 
     expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="someprefix-ns-abc" height="100" width="100" viewBox="0 0 100 100"><use href="#someprefix-ns-abc"/></svg>');
@@ -166,7 +167,7 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
     const TEST_ELEMENT = {
       childNodes: [],
     };
-    const testFn = jest.fn().mockReturnValue(false);
+    const testFn = createMock().mockReturnValue(false);
     const MOCK_NS_MAP = {
       '': {},
       xlink: {},
@@ -192,8 +193,8 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_ELEMENT = {
       attributes: {
-        getNamedItem: jest.fn().mockReturnValueOnce({value: shape.DEFAULT_SVG_NAMESPACE}),
-        removeNamedItem: jest.fn(),
+        getNamedItem: createMock().mockReturnValueOnce({value: shape.DEFAULT_SVG_NAMESPACE}),
+        removeNamedItem: createMock(),
       },
       childNodes: [],
     };
@@ -209,8 +210,8 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_ELEMENT = {
       attributes: {
-        getNamedItem: jest.fn().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
-        removeNamedItem: jest.fn(),
+        getNamedItem: createMock().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
+        removeNamedItem: createMock(),
       },
       childNodes: [],
     };
@@ -226,8 +227,8 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_ELEMENT = {
       attributes: {
-        getNamedItem: jest.fn().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
-        removeNamedItem: jest.fn(),
+        getNamedItem: createMock().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
+        removeNamedItem: createMock(),
       },
       childNodes: [],
     };
@@ -248,8 +249,8 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
     const TEST_ELEMENT = {
       _nsMap: {TEST_NS_MAP: true},
       attributes: {
-        getNamedItem: jest.fn().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
-        removeNamedItem: jest.fn(),
+        getNamedItem: createMock().mockReturnValueOnce({value: shape.XLINK_NAMESPACE}),
+        removeNamedItem: createMock(),
       },
       childNodes: {
         0: TEST_CHILD_1,
@@ -259,7 +260,7 @@ describe('testing _stripInlineNamespaceDeclarations()', () => {
         item(i) {
           if (!isMethodMocked) {
             isMethodMocked = true; // Mocking the other calls
-            jest.spyOn(shape, '_stripInlineNamespaceDeclarations').mockImplementation();
+            spyOn(shape, '_stripInlineNamespaceDeclarations').mockImplementation();
           }
 
           return this[i];
@@ -285,7 +286,7 @@ describe('testing setSVG()', () => {
     const TEST_SVG = 'TEST_svg';
     const TEST_RESULT = {TEST: 'result'};
 
-    jest.spyOn(shape, '_initSVG').mockReturnValueOnce(TEST_RESULT);
+    spyOn(shape, '_initSVG').mockReturnValueOnce(TEST_RESULT);
 
     expect(shape.setSVG(TEST_SVG)).toBe(TEST_RESULT);
     expect(shape.svg.current).toBe(TEST_SVG);

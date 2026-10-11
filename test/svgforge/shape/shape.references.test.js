@@ -2,11 +2,11 @@ import {Buffer} from 'node:buffer';
 import File from 'vinyl';
 import createShape from '../../../lib/svgforge/shape/index.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const TEST_SPRITER = {
   config: {

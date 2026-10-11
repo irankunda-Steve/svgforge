@@ -6,18 +6,18 @@ import path from 'node:path';
 import {Buffer} from 'node:buffer';
 import {fileURLToPath} from 'node:url';
 import File from 'vinyl';
-import SVGSpriter from '../lib/svgforge.js';
+import SVGSpriter from '../../lib/svgforge.js';
 import {
   beforeEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from './helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const TEST_SVG = 'fixture/svg/single/weather-clear.svg';
+const TEST_SVG = '../fixture/svg/single/weather-clear.svg';
 const TEST_EMPTY_SVG = '<svg></svg>';
 
 describe('testing SVGSpriter', () => {
@@ -41,7 +41,7 @@ describe('testing SVGSpriter', () => {
         });
 
         spriter._queue = {
-          add: jest.fn(),
+          add: createMock(),
         };
 
         spriter.add(TEST_FILE);
@@ -96,7 +96,7 @@ describe('testing SVGSpriter', () => {
 
       it('should create vinyl file from passed relative file and add it to _queue', () => {
         spriter._queue = {
-          add: jest.fn(),
+          add: createMock(),
         };
         spriter.add(TEST_SVG, 'weather-clear.svg', TEST_EMPTY_SVG);
 
@@ -113,7 +113,7 @@ describe('testing SVGSpriter', () => {
         '',
       ])('should create vinyl file with file name if name is %p', name => {
         spriter._queue = {
-          add: jest.fn(),
+          add: createMock(),
         };
         spriter.add(TEST_SVG, name, TEST_EMPTY_SVG);
 
@@ -126,7 +126,7 @@ describe('testing SVGSpriter', () => {
 
       it('should create vinyl file from passed absolute file and add it to _queue', () => {
         spriter._queue = {
-          add: jest.fn(),
+          add: createMock(),
         };
         spriter.add(path.resolve(TEST_SVG), 'weather-clear.svg', TEST_EMPTY_SVG);
 
@@ -142,7 +142,7 @@ describe('testing SVGSpriter', () => {
 
 describe('testing transform', () => {
   it('should call all transformations', async () => {
-    const testTransformFunction = jest.fn();
+    const testTransformFunction = createMock();
     const spriter = new SVGSpriter({
       shape: {
         dest: 'svg',

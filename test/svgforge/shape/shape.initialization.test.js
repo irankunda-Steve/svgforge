@@ -4,17 +4,17 @@ import path from 'node:path';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import File from 'vinyl';
-import getShape from '../lib/svgforge/shape/index.js';
-import SVGSpriter from '../lib/svgforge.js';
-import {setDependency} from '../lib/deps.js';
-import ArgumentError from '../lib/svgforge/errors/argument-error.js';
+import getShape from '../../../lib/svgforge/shape/index.js';
+import SVGSpriter from '../../../lib/svgforge.js';
+import {setDependency} from '../../../lib/deps.js';
+import ArgumentError from '../../../lib/svgforge/errors/argument-error.js';
 import {
   beforeEach,
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-} from './helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -84,7 +84,7 @@ describe('testing SVGShape initialization', () => {
   it('should not throw an error and should not call fixXMLString on actual valid svg files', () => {
     expect.hasAssertions();
 
-    const cwd = path.join(__dirname, 'fixture/svg/single');
+    const cwd = path.join(__dirname, '../../fixture/svg/single');
     const weatherFiles = fs.globSync('**/weather*.svg', {cwd}).toSorted((a, b) => b.localeCompare(a));
 
     expect.assertions(weatherFiles.length * 2);

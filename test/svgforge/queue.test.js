@@ -7,12 +7,12 @@ import DimensionsCalculationError from '../../lib/svgforge/errors/dimensions-cal
 import {setDependency} from '../../lib/deps.js';
 import {
   beforeEach,
+  createMock,
   describe,
   expect,
   it,
-  createMock,
   spyOn,
-} from '../helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 /* eslint-disable max-nested-callbacks -- Mock implementations of the queued shape/process callbacks are intentionally nested to model the async event flow under test. */
 

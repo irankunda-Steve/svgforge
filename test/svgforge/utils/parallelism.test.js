@@ -3,7 +3,7 @@ import {
   describe,
   expect,
   it,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 describe('testing coreCount()', () => {
   it('should never report less than one core', () => {

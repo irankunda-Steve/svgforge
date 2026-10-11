@@ -3,18 +3,19 @@ import {Buffer} from 'node:buffer';
 import File from 'vinyl';
 import SVGSprite from '../../lib/svgforge/sprite.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../helpers/jest-compat.js';
+  spyOn,
+} from '../helpers/harness.js';
 
 describe('testing SVGSprite', () => {
   describe('testing initial settings', () => {
     it('should set initial attributes', () => {
       expect.hasAssertions();
 
-      const TEST_TRANSFORM = [jest.fn()];
+      const TEST_TRANSFORM = [createMock()];
       const sprite = new SVGSprite('', '', {}, false, TEST_TRANSFORM);
 
       expect(sprite.transform).toBe(TEST_TRANSFORM);
@@ -91,7 +92,7 @@ describe('testing SVGSprite', () => {
       expect(sprite._serialized).toBeNull();
     });
 
-    it.each([false, true, {}, jest.fn(), Symbol(''), 1, null, undefined, 'string'])('should not push to content if %p passed', parameter => {
+    it.each([false, true, {}, createMock(), Symbol(''), 1, null, undefined, 'string'])('should not push to content if %p passed', parameter => {
       expect.hasAssertions();
 
       const sprite = new SVGSprite(false, false, {}, false, []);
@@ -140,7 +141,7 @@ describe('testing SVGSprite', () => {
     it('should transform svg in series', () => {
       expect.hasAssertions();
 
-      const TEST_TRANSFORM = [jest.fn().mockReturnValueOnce(false), jest.fn().mockReturnValueOnce('TEST')];
+      const TEST_TRANSFORM = [createMock().mockReturnValueOnce(false), createMock().mockReturnValueOnce('TEST')];
       const sprite = new SVGSprite(false, false, {}, false, TEST_TRANSFORM);
       const expected = 'TEST';
 
@@ -160,7 +161,7 @@ describe('testing SVGSprite', () => {
       const TEST_BASE = 'TEST_BASE';
       const TEST_PATH = 'TEST_PATH';
       const sprite = new SVGSprite(false, false, {}, false, []);
-      jest.spyOn(sprite, 'toString').mockReturnValueOnce(TEST_CONTENT);
+      spyOn(sprite, 'toString').mockReturnValueOnce(TEST_CONTENT);
 
       expect(sprite.toFile(TEST_BASE, TEST_PATH)).toStrictEqual(new File({
         base: TEST_BASE,

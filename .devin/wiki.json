@@ -193,7 +193,7 @@
     },
     {
       "title": "Test Helpers & Visual Regression",
-      "purpose": "jest-compat shim, add-files/write-files, capture-browser with playwright, svg->png conversion and pixelmatch comparisons.",
+      "purpose": "test harness helpers, add-files/write-files, capture-browser with playwright, svg->png conversion and pixelmatch comparisons.",
       "parent": "Testing & Quality",
       "page_notes": [
         {

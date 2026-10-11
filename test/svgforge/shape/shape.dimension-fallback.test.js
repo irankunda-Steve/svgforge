@@ -5,11 +5,11 @@ import SVGSpriter from '../../../lib/svgforge.js';
 import DimensionsCalculationError from '../../../lib/svgforge/errors/dimensions-calculation-error.js';
 import {isResvgAvailable} from '../../../lib/svgforge/utils/calculate-svg-dimensions.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -5,12 +5,12 @@ import createShape from '../../../lib/svgforge/shape/index.js';
 import NotPermittedError from '../../../lib/svgforge/errors/not-permitted-error.js';
 import {setDependency} from '../../../lib/deps.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  createMock,
   spyOn,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const mockMinifyBlock = createMock().mockReturnValue({css: ''});
 setDependency('csso', {minifyBlock: mockMinifyBlock});

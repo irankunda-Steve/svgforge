@@ -4,11 +4,12 @@ import {setDependency, resetDependencies} from '../../../lib/deps.js';
 import {
   afterEach,
   beforeEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  restoreAllMocks,
+} from '../../helpers/harness.js';
 
 const TEST_SVG = '<svg></svg>';
 
@@ -17,13 +18,13 @@ describe('testing transforms.svgo', () => {
   let mockOptimize;
 
   beforeEach(() => {
-    noop = jest.fn();
-    mockOptimize = jest.fn().mockReturnValue({data: ''});
+    noop = createMock();
+    mockOptimize = createMock().mockReturnValue({data: ''});
     setDependency('svgo:optimize', mockOptimize);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    restoreAllMocks();
     resetDependencies();
   });
 
@@ -37,11 +38,11 @@ describe('testing transforms.svgo', () => {
           doctypeDeclaration: false,
         },
       },
-      error: jest.fn(),
+      error: createMock(),
     };
     const shape = {
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
     const TEST_RESULT = 'test result';
 
@@ -80,11 +81,11 @@ describe('testing transforms.svgo', () => {
           doctypeDeclaration: true,
         },
       },
-      error: jest.fn(),
+      error: createMock(),
     };
     const shape = {
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
     const TEST_RESULT = 'test result';
 
@@ -128,11 +129,11 @@ describe('testing transforms.svgo', () => {
           doctypeDeclaration: true,
         },
       },
-      error: jest.fn(),
+      error: createMock(),
     };
     const shape = {
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
     const TEST_RESULT = 'test result';
 
@@ -158,13 +159,13 @@ describe('testing transforms.svgo', () => {
           }],
         },
       },
-      error: jest.fn(),
-      debug: jest.fn(),
+      error: createMock(),
+      debug: createMock(),
     };
     const shape = {
       name: 'name',
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValueOnce(MOCKED_ORIGINAL_SVG).mockReturnValueOnce(MOCKED_OPTIMIZED_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValueOnce(MOCKED_ORIGINAL_SVG).mockReturnValueOnce(MOCKED_OPTIMIZED_SVG),
     };
 
     mockOptimize.mockReturnValueOnce({});
@@ -186,13 +187,13 @@ describe('testing transforms.svgo', () => {
           }],
         },
       },
-      error: jest.fn(),
-      debug: jest.fn(),
+      error: createMock(),
+      debug: createMock(),
     };
     const shape = {
       name: 'name',
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
 
     mockOptimize.mockReturnValueOnce({});
@@ -211,13 +212,13 @@ describe('testing transforms.svgo', () => {
           transports: [],
         },
       },
-      error: jest.fn(),
-      debug: jest.fn(),
+      error: createMock(),
+      debug: createMock(),
     };
     const shape = {
       name: 'name',
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
 
     mockOptimize.mockReturnValueOnce({});
@@ -235,13 +236,13 @@ describe('testing transforms.svgo', () => {
       config: {
         svg: {},
       },
-      error: jest.fn(),
-      debug: jest.fn(),
+      error: createMock(),
+      debug: createMock(),
     };
     const shape = {
       name: 'name',
-      setSVG: jest.fn(),
-      getSVG: jest.fn().mockReturnValue(TEST_SVG),
+      setSVG: createMock(),
+      getSVG: createMock().mockReturnValue(TEST_SVG),
     };
 
     mockOptimize.mockImplementationOnce(() => {

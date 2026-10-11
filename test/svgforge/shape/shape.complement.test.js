@@ -7,11 +7,13 @@ import {setDependency, resetDependencies} from '../../../lib/deps.js';
 import {
   afterEach,
   beforeEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  restoreAllMocks,
+  spyOn,
+} from '../../helpers/harness.js';
 
 const TEST_SPRITER = {
   config: {
@@ -23,7 +25,7 @@ const TEST_SPRITER = {
       doctypeDeclaration: '',
     },
   },
-  verbose: jest.fn(),
+  verbose: createMock(),
 };
 const TEST_FILE = new File({
   contents: Buffer.from('<svg></svg>'),
@@ -35,12 +37,12 @@ const TEST_FILE = new File({
 let mockCalc;
 
 beforeEach(() => {
-  mockCalc = jest.fn();
+  mockCalc = createMock();
   setDependency('calculate-svg-dimensions', mockCalc);
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreAllMocks();
   resetDependencies();
 });
 
@@ -49,11 +51,11 @@ describe('testing _complementDimensions()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const cb = jest.fn();
+    const cb = createMock();
 
     shape.width = 10;
     shape.height = 10;
-    jest.spyOn(shape, '_setDimensions');
+    spyOn(shape, '_setDimensions');
 
     shape._complementDimensions(cb);
 
@@ -64,12 +66,12 @@ describe('testing _complementDimensions()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const cb = jest.fn();
+    const cb = createMock();
 
     shape.width = 0;
     shape.height = 0;
-    jest.spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(null));
-    jest.spyOn(shape, '_setDimensions');
+    spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(null));
+    spyOn(shape, '_setDimensions');
 
     shape._complementDimensions(cb);
 
@@ -81,13 +83,13 @@ describe('testing _complementDimensions()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const cb = jest.fn();
+    const cb = createMock();
     const TEST_ERROR = new Error('dimension calculation failed');
 
     shape.width = 0;
     shape.height = 0;
-    jest.spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(TEST_ERROR));
-    jest.spyOn(shape, '_setDimensions');
+    spyOn(shape, '_determineDimensions').mockImplementation(dimensionCb => dimensionCb(TEST_ERROR));
+    spyOn(shape, '_setDimensions');
 
     shape._complementDimensions(cb);
 
@@ -102,8 +104,8 @@ describe('testing _determineDimensions()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const cb = jest.fn();
-    jest.spyOn(shape, '_round').mockReturnValueOnce(10).mockReturnValueOnce(20);
+    const cb = createMock();
+    spyOn(shape, '_round').mockReturnValueOnce(10).mockReturnValueOnce(20);
     shape.viewBox = [0, 1, 2, 3];
     shape.width = 1;
     shape.height = 1;
@@ -126,9 +128,9 @@ describe('testing _determineDimensions()', () => {
     const TEST_HEIGHT = 100;
     const TEST_SVG = 'svg';
 
-    const cb = jest.fn();
-    jest.spyOn(shape, '_round').mockReturnValueOnce(10).mockReturnValueOnce(20);
-    jest.spyOn(shape, 'getSVG').mockReturnValueOnce(TEST_SVG);
+    const cb = createMock();
+    spyOn(shape, '_round').mockReturnValueOnce(10).mockReturnValueOnce(20);
+    spyOn(shape, 'getSVG').mockReturnValueOnce(TEST_SVG);
     shape.width = 0;
     shape.height = 0;
 
@@ -146,7 +148,7 @@ describe('testing _determineDimensions()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const cb = jest.fn();
+    const cb = createMock();
     const TEST_ERROR = 'test error';
     shape.width = 0;
     shape.height = 0;
@@ -170,8 +172,8 @@ describe('testing _setDimensions()', () => {
     shape.width = TEST_WIDTH;
     shape.height = TEST_HEIGHT;
 
-    const cb = jest.fn();
-    jest.spyOn(shape, 'getViewbox').mockReturnValueOnce(null);
+    const cb = createMock();
+    spyOn(shape, 'getViewbox').mockReturnValueOnce(null);
     shape._setDimensions(cb);
 
     expect(shape.getViewbox).toHaveBeenCalledWith(TEST_WIDTH, TEST_HEIGHT);
@@ -184,10 +186,10 @@ describe('testing _setDimensions()', () => {
     const shape = createShape(TEST_FILE, TEST_SPRITER);
     const TEST_WIDTH = 300;
     const TEST_HEIGHT = 100;
-    jest.spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
-    jest.spyOn(shape, 'getViewbox').mockReturnValueOnce(null);
-    jest.spyOn(shape, 'getDimensions').mockReturnValueOnce({height: TEST_HEIGHT, width: TEST_WIDTH});
-    shape._setDimensions(jest.fn());
+    spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
+    spyOn(shape, 'getViewbox').mockReturnValueOnce(null);
+    spyOn(shape, 'getDimensions').mockReturnValueOnce({height: TEST_HEIGHT, width: TEST_WIDTH});
+    shape._setDimensions(createMock());
 
     expect(shape.dom.documentElement.setAttribute).toHaveBeenCalledTimes(2);
     expect(shape.dom.documentElement.setAttribute.mock.calls[0]).toStrictEqual(expect.arrayContaining(['height', TEST_HEIGHT]));
@@ -208,7 +210,7 @@ describe('testing _setDimensions()', () => {
       shape.config.spacing.padding.left = 10;
       shape.config.dimension.maxWidth = TEST_WIDTH;
 
-      shape._setDimensions(jest.fn());
+      shape._setDimensions(createMock());
 
       expect(shape._scale).toBe(380 / 400);
       expect(shape.width).toBe(380);
@@ -228,7 +230,7 @@ describe('testing _setDimensions()', () => {
       shape.config.spacing.padding.bottom = 10;
       shape.config.dimension.maxHeight = TEST_HEIGHT;
 
-      shape._setDimensions(jest.fn());
+      shape._setDimensions(createMock());
 
       expect(shape.height).toBe(80);
       expect(shape.width).toBe(300 * 80 / 100);
@@ -247,7 +249,7 @@ describe('testing _setDimensions()', () => {
       shape.config.dimension.maxHeight = TEST_HEIGHT;
       shape.config.dimension.maxWidth = TEST_WIDTH;
 
-      shape._setDimensions(jest.fn());
+      shape._setDimensions(createMock());
 
       expect(shape._scale).toBe(2);
       expect(shape.height).toBe(100);
@@ -268,7 +270,7 @@ describe('testing _setDimensions()', () => {
       shape.config.dimension.maxHeight = TEST_HEIGHT;
       shape.config.dimension.maxWidth = TEST_WIDTH;
 
-      shape._setDimensions(jest.fn());
+      shape._setDimensions(createMock());
 
       expect(shape.config.spacing.padding.left).toBe(0);
       expect(shape.config.spacing.padding.right).toBe(0);
@@ -282,12 +284,12 @@ describe('testing _addPadding()', () => {
   it('should set viewbox from getViewbox() and add padding from config.spacing.padding', () => {
     expect.hasAssertions();
 
-    const noop = jest.fn();
+    const noop = createMock();
     const shape = createShape(TEST_FILE, TEST_SPRITER);
 
-    jest.spyOn(shape, 'getViewbox').mockReturnValueOnce([100, 200, 300, 400]);
-    jest.spyOn(shape, 'setViewbox');
-    jest.spyOn(shape, 'setDimensions');
+    spyOn(shape, 'getViewbox').mockReturnValueOnce([100, 200, 300, 400]);
+    spyOn(shape, 'setViewbox');
+    spyOn(shape, 'setDimensions');
 
     shape.config.spacing.padding = {
       top: 10,
@@ -307,12 +309,12 @@ describe('testing _addPadding()', () => {
   it('should set viewbox if config.spacing.padding is zero', () => {
     expect.hasAssertions();
 
-    const noop = jest.fn();
+    const noop = createMock();
     const shape = createShape(TEST_FILE, TEST_SPRITER);
 
-    jest.spyOn(shape, 'getViewbox');
-    jest.spyOn(shape, 'setViewbox');
-    jest.spyOn(shape, 'setDimensions');
+    spyOn(shape, 'getViewbox');
+    spyOn(shape, 'setViewbox');
+    spyOn(shape, 'setDimensions');
 
     shape.config.spacing.padding = {
       top: 0,
@@ -334,13 +336,13 @@ describe('testing _addMetadata()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const noop = jest.fn();
+    const noop = createMock();
     const TEST_DESCRIPTION = 'TEST';
 
     shape.meta.description = TEST_DESCRIPTION;
     shape.id = 'TEST_ID';
-    shape.description = {setAttribute: jest.fn()};
-    jest.spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
+    shape.description = {setAttribute: createMock()};
+    spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
 
     shape._addMetadata(noop);
 
@@ -354,7 +356,7 @@ describe('testing _addMetadata()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const noop = jest.fn();
+    const noop = createMock();
     const TEST_DESCRIPTION = 'TEST';
 
     shape.description = null;
@@ -370,13 +372,13 @@ describe('testing _addMetadata()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const noop = jest.fn();
+    const noop = createMock();
     const TEST_TITLE = 'TEST';
 
     shape.meta.title = TEST_TITLE;
     shape.id = 'TEST_ID';
-    shape.title = {setAttribute: jest.fn()};
-    jest.spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
+    shape.title = {setAttribute: createMock()};
+    spyOn(shape.dom.documentElement, 'setAttribute').mockImplementation();
 
     shape._addMetadata(noop);
 
@@ -390,7 +392,7 @@ describe('testing _addMetadata()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const noop = jest.fn();
+    const noop = createMock();
     const TEST_TITLE = 'TEST';
 
     shape.title = null;
@@ -406,10 +408,10 @@ describe('testing _addMetadata()', () => {
     expect.hasAssertions();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
-    const noop = jest.fn();
+    const noop = createMock();
 
-    jest.spyOn(shape.dom.documentElement, 'hasAttribute').mockReturnValueOnce(true);
-    jest.spyOn(shape.dom.documentElement, 'removeAttribute');
+    spyOn(shape.dom.documentElement, 'hasAttribute').mockReturnValueOnce(true);
+    spyOn(shape.dom.documentElement, 'removeAttribute');
 
     shape._addMetadata(noop);
 
@@ -422,10 +424,10 @@ describe('testing complement()', () => {
   it('should call all functions and set ready state', async () => {
     expect.hasAssertions();
 
-    const testComplementDimensions = jest.fn().mockImplementation(fn => fn(null));
-    const testAddPadding = jest.fn().mockImplementation(fn => fn(null));
-    const testAddMetadata = jest.fn().mockImplementation(fn => fn(null));
-    const noop = jest.fn();
+    const testComplementDimensions = createMock().mockImplementation(fn => fn(null));
+    const testAddPadding = createMock().mockImplementation(fn => fn(null));
+    const testAddMetadata = createMock().mockImplementation(fn => fn(null));
+    const noop = createMock();
 
     const shape = createShape(TEST_FILE, TEST_SPRITER);
 

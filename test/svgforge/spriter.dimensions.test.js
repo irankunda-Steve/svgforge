@@ -3,18 +3,18 @@ import {Buffer} from 'node:buffer';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DOMParser} from '@xmldom/xmldom';
-import SVGSpriter from '../lib/svgforge.js';
-import {setDependency} from '../lib/deps.js';
+import SVGSpriter from '../../lib/svgforge.js';
+import {setDependency} from '../../lib/deps.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from './helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const mockCalc = jest.fn();
+const mockCalc = createMock();
 setDependency('calculate-svg-dimensions', mockCalc);
 
 const expectations = [{
@@ -55,7 +55,7 @@ describe('testing shapes', () => {
 
     mockCalc.mockReturnValueOnce(dimension);
 
-    const svgFilePath = path.join(__dirname, `fixture/svg/special/without-dims/${svg}`);
+    const svgFilePath = path.join(__dirname, `../fixture/svg/special/without-dims/${svg}`);
 
     spriter.add(svgFilePath, svg, Buffer.from(TEST_SVG));
 
@@ -90,7 +90,7 @@ describe('testing shapes', () => {
       throw new Error('Dimension calculation failed');
     });
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/46x46.svg');
+    const svgFilePath = path.join(__dirname, '../fixture/svg/special/without-dims/46x46.svg');
     spriter.add(svgFilePath, '46x46.svg', Buffer.from(TEST_SVG));
 
     const {result} = await spriter.compileAsync();

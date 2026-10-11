@@ -9,7 +9,7 @@ import {
   describe,
   expect,
   it,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const temporaryPath = paths.tmp + '/view';
 

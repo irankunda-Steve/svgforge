@@ -1,7 +1,7 @@
 import path from 'node:path';
 import process from 'node:process';
 import SVGSpriter from '../../../lib/svgforge.js';
-import {describe, expect, it} from '../../helpers/jest-compat.js';
+import {describe, expect, it} from '../../helpers/harness.js';
 
 const TEST_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" aria-label="Search" data-internal="yes"><path d="M0 0h24v24H0z"/></svg>';
 

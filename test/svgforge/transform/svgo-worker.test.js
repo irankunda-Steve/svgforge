@@ -4,11 +4,11 @@ import {isSerializable, optimizeInWorker, terminateWorkers} from '../../../lib/s
 import {setDependency, resetDependencies} from '../../../lib/deps.js';
 import {
   afterEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const TEST_SVG = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100"/></svg>';
 
@@ -45,14 +45,14 @@ const createSpriter = () => ({
       transports: [],
     },
   },
-  error: jest.fn(),
-  debug: jest.fn(),
+  error: createMock(),
+  debug: createMock(),
 });
 
 const createShape = () => ({
   name: 'shape',
-  setSVG: jest.fn(),
-  getSVG: jest.fn().mockReturnValue(TEST_SVG),
+  setSVG: createMock(),
+  getSVG: createMock().mockReturnValue(TEST_SVG),
 });
 
 const runTransform = (shape, config, spriter) => new Promise(resolve => {
@@ -91,7 +91,7 @@ describe('testing isSerializable', () => {
 
 describe('testing svgoTransform with the worker pool', () => {
   it('should dispatch optimization to a worker and apply the result', async () => {
-    const workerOptimize = jest.fn(optimizeInWorker);
+    const workerOptimize = createMock(optimizeInWorker);
     setDependency('svgo:pool:optimize', workerOptimize);
     const shape = createShape();
     const spriter = createSpriter();
@@ -105,13 +105,13 @@ describe('testing svgoTransform with the worker pool', () => {
   });
 
   it('should fall back to the main thread when the optimizer is replaced', () => {
-    const mockOptimize = jest.fn().mockReturnValue({data: 'optimized'});
+    const mockOptimize = createMock().mockReturnValue({data: 'optimized'});
     setDependency('svgo:optimize', mockOptimize);
-    const workerOptimize = jest.fn();
+    const workerOptimize = createMock();
     setDependency('svgo:pool:optimize', workerOptimize);
     const shape = createShape();
     const spriter = createSpriter();
-    const callback = jest.fn();
+    const callback = createMock();
 
     svgoTransform(shape, {}, spriter, callback);
 
@@ -122,7 +122,7 @@ describe('testing svgoTransform with the worker pool', () => {
   });
 
   it('should fall back to the main thread for non-serializable configs', async () => {
-    const workerOptimize = jest.fn();
+    const workerOptimize = createMock();
     setDependency('svgo:pool:optimize', workerOptimize);
     const shape = createShape();
     const spriter = createSpriter();
@@ -138,7 +138,7 @@ describe('testing svgoTransform with the worker pool', () => {
 
   it('should report worker failures through the callback', async () => {
     const TEST_ERROR = new Error('worker boom');
-    const workerOptimize = jest.fn().mockReturnValue(Promise.reject(TEST_ERROR));
+    const workerOptimize = createMock().mockReturnValue(Promise.reject(TEST_ERROR));
     setDependency('svgo:pool:optimize', workerOptimize);
     const shape = createShape();
     const spriter = createSpriter();

@@ -9,7 +9,7 @@ import {
   describe,
   expect,
   it,
-} from '../helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

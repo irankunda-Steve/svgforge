@@ -10,8 +10,8 @@ import {
   zipObject,
   deepMerge,
   escapeHtml,
-} from '../lib/svgforge/utils/index.js';
-import {describe, expect, it} from './helpers/jest-compat.js';
+} from '../../../lib/svgforge/utils/index.js';
+import {describe, expect, it} from '../../helpers/harness.js';
 
 describe('utils', () => {
   describe('isFunction', () => {

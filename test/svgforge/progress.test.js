@@ -6,11 +6,11 @@ import {constants} from '../helpers/test-configs.js';
 import {paths} from '../helpers/constants.js';
 import removeTmpPath from '../helpers/remove-temp-path.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-} from '../helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -2,12 +2,12 @@ import SVGSpriterConfig from '../../../lib/svgforge/config.js';
 import {
   afterAll,
   beforeAll,
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-  jest,
-} from '../../helpers/jest-compat.js';
+  spyOn,
+} from '../../helpers/harness.js';
 
 describe('testing log', () => {
   const getLogger = () => ({
@@ -39,8 +39,8 @@ describe('testing log', () => {
 
     const TEST_LOGGER = getLogger();
 
-    jest.spyOn(TEST_LOGGER, 'debug');
-    jest.spyOn(TEST_LOGGER, 'verbose');
+    spyOn(TEST_LOGGER, 'debug');
+    spyOn(TEST_LOGGER, 'verbose');
 
     // eslint-disable-next-line no-new
     new SVGSpriterConfig({

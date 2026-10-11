@@ -6,11 +6,11 @@ import {Buffer} from 'node:buffer';
 import File from 'vinyl';
 import createShape from '../../../lib/svgforge/shape/index.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 describe('testing Shape.constructor', () => {
   describe('testing constructor', () => {
@@ -29,7 +29,7 @@ describe('testing Shape.constructor', () => {
           shape: {meta: {}},
           id: {},
         },
-        verbose: jest.fn(),
+        verbose: createMock(),
       };
       const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -53,7 +53,7 @@ describe('testing Shape.constructor', () => {
             },
             id: {},
           },
-          verbose: jest.fn(),
+          verbose: createMock(),
         };
         const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -73,7 +73,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -101,7 +101,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE_WITH_FOLDERS, TEST_SPRITER);
 
@@ -120,7 +120,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -140,7 +140,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -161,7 +161,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -182,7 +182,7 @@ describe('testing Shape.constructor', () => {
                 meta: {},
               },
             },
-            verbose: jest.fn(),
+            verbose: createMock(),
           };
           const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -207,7 +207,7 @@ describe('testing Shape.constructor', () => {
               },
             },
           },
-          verbose: jest.fn(),
+          verbose: createMock(),
         };
         const shape = createShape(TEST_FILE, TEST_SPRITER);
 
@@ -228,7 +228,7 @@ describe('testing Shape.constructor', () => {
               },
             },
           },
-          verbose: jest.fn(),
+          verbose: createMock(),
         };
         const shape = createShape(TEST_FILE, TEST_SPRITER);
 

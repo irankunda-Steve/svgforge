@@ -1,6 +1,6 @@
 
 import SVGSpriterConfig from '../../../lib/svgforge/config.js';
-import {describe, expect, it} from '../../helpers/jest-compat.js';
+import {describe, expect, it} from '../../helpers/harness.js';
 
 describe('testing SVGSpriterConfig shape.spacing', () => {
   const DEFAULT_SPACING = {

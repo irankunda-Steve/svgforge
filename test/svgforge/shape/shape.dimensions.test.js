@@ -3,11 +3,12 @@ import {Buffer} from 'node:buffer';
 import File from 'vinyl';
 import createShape from '../../../lib/svgforge/shape/index.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  spyOn,
+} from '../../helpers/harness.js';
 
 const TEST_SPRITER = {
   config: {
@@ -16,7 +17,7 @@ const TEST_SPRITER = {
       align: {},
     },
   },
-  verbose: jest.fn(),
+  verbose: createMock(),
 };
 const TEST_FILE = new File({
   contents: Buffer.from('<svg></svg>'),
@@ -66,7 +67,7 @@ describe('testing getViewbox()', () => {
     shape.width = null;
     shape.height = null;
 
-    jest.spyOn(shape, 'setViewbox').mockReturnValueOnce('TEST');
+    spyOn(shape, 'setViewbox').mockReturnValueOnce('TEST');
 
     shape.getViewbox();
 
@@ -81,7 +82,7 @@ describe('testing getViewbox()', () => {
     shape.width = null;
     shape.height = null;
 
-    jest.spyOn(shape, 'setViewbox').mockReturnValueOnce('TEST');
+    spyOn(shape, 'setViewbox').mockReturnValueOnce('TEST');
 
     shape.getViewbox(10, 200);
 

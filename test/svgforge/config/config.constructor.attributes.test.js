@@ -3,11 +3,11 @@ import path from 'node:path';
 import SVGSpriterConfig from '../../../lib/svgforge/config.js';
 import {paths} from '../../helpers/constants.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 describe('testing initial attributes', () => {
   it('should set dest from config.dest', () => {
@@ -43,7 +43,7 @@ describe('testing sort', () => {
   it('should set sort accordingly to config if function provided', () => {
     expect.hasAssertions();
 
-    const TEST_FN = jest.fn();
+    const TEST_FN = createMock();
     const config = new SVGSpriterConfig({shape: {sort: TEST_FN}});
 
     expect(config.shape.sort).toBe(TEST_FN);

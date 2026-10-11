@@ -1,21 +1,21 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import SVGSpriter from '../lib/svgforge.js';
-import {addFixtureFiles} from './helpers/add-files.js';
-import {constants} from './helpers/test-configs.js';
-import {paths} from './helpers/constants.js';
-import removeTmpPath from './helpers/remove-temp-path.js';
+import SVGSpriter from '../../lib/svgforge.js';
+import {addFixtureFiles} from '../helpers/add-files.js';
+import {constants} from '../helpers/test-configs.js';
+import {paths} from '../helpers/constants.js';
+import removeTmpPath from '../helpers/remove-temp-path.js';
 import {
   describe,
   expect,
   it,
-} from './helpers/jest-compat.js';
+} from '../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const TEST_CONFIG = constants.DEFAULT;
 const temporaryPath = path.join(paths.tmp, 'custom-template');
-const customTemplate = path.join(__dirname, './fixture/templates/custom-example.vto');
+const customTemplate = path.join(__dirname, '../fixture/templates/custom-example.vto');
 const customDest = 'custom.html';
 
 describe('custom templates', () => {

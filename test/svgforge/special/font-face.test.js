@@ -2,7 +2,7 @@
 import path from 'node:path';
 import SVGSpriter from '../../../lib/svgforge.js';
 import {paths} from '../../helpers/constants.js';
-import {describe, expect, it} from '../../helpers/jest-compat.js';
+import {describe, expect, it} from '../../helpers/harness.js';
 
 describe('testing font face preserving', () => {
   it('preserve font-face in sprite', async () => {

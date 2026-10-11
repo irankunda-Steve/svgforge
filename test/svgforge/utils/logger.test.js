@@ -5,18 +5,19 @@ import {
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  restoreAllMocks,
+  spyOn,
+} from '../../helpers/harness.js';
 
 describe('testing createLogger()', () => {
   let stdoutWriteSpy;
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    restoreAllMocks();
   });
 
   const spyStdout = () => {
-    stdoutWriteSpy = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    stdoutWriteSpy = spyOn(process.stdout, 'write').mockImplementation(() => true);
   };
 
   it('should write messages at or above the configured level to stdout', () => {

@@ -4,12 +4,12 @@ import File from 'vinyl';
 import createShape from '../../../lib/svgforge/shape/index.js';
 import {setDependency} from '../../../lib/deps.js';
 import {
+  afterEach,
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-  afterEach,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const TEST_SPRITER = {
   config: {

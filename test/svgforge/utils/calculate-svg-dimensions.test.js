@@ -2,15 +2,15 @@
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import calculateSvgDimensions, {isResvgAvailable} from '../lib/svgforge/utils/calculate-svg-dimensions.js';
-import {setDependency, resetDependencies} from '../lib/deps.js';
-import DimensionsCalculationError from '../lib/svgforge/errors/dimensions-calculation-error.js';
+import calculateSvgDimensions, {isResvgAvailable} from '../../../lib/svgforge/utils/calculate-svg-dimensions.js';
+import {setDependency, resetDependencies} from '../../../lib/deps.js';
+import DimensionsCalculationError from '../../../lib/svgforge/errors/dimensions-calculation-error.js';
 import {
+  createMock,
   describe,
   expect,
   it,
-  createMock,
-} from './helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +40,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(46, 46));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/46x46.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/46x46.svg');
     const svg = await readFile(svgFilePath, 'utf8');
     const dimensions = calculateSvgDimensions(svg);
     const expected = {width: 46, height: 46};
@@ -53,7 +53,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(2048, 2048));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/2048x2048.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/2048x2048.svg');
     const svg = await readFile(svgFilePath, 'utf8');
     const dimensions = calculateSvgDimensions(svg);
     const expected = {width: 2048, height: 2048};
@@ -66,7 +66,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(32, 32));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/32x32.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/32x32.svg');
     const svg = await readFile(svgFilePath, 'utf8');
     const dimensions = calculateSvgDimensions(svg);
     const expected = {width: 32, height: 32};
@@ -79,7 +79,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(100, 100));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/100x100.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/100x100.svg');
     const svg = await readFile(svgFilePath, 'utf8');
     const dimensions = calculateSvgDimensions(svg);
     const expected = {width: 100, height: 100};
@@ -92,7 +92,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(231, 69));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/231x69.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/231x69.svg');
     const svg = await readFile(svgFilePath, 'utf8');
     const dimensions = calculateSvgDimensions(svg);
     const expected = {width: 231, height: 69};
@@ -105,7 +105,7 @@ describe('calculateSvgDimensions', () => {
 
     setDependency('@resvg/resvg-js', createMockResvgPackage(46, 46));
 
-    const svgFilePath = path.join(__dirname, 'fixture/svg/special/without-dims/46x46.svg');
+    const svgFilePath = path.join(__dirname, '../../fixture/svg/special/without-dims/46x46.svg');
     const svg = await readFile(svgFilePath, 'utf8');
 
     const firstRunDimensions = calculateSvgDimensions(svg);

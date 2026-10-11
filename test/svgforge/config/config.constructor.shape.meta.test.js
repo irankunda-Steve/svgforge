@@ -6,14 +6,16 @@ import SVGSpriterConfig from '../../../lib/svgforge/config.js';
 import {setDependency, resetDependencies} from '../../../lib/deps.js';
 import {
   afterEach,
+  createMock,
   describe,
   expect,
   it,
-  jest,
-} from '../../helpers/jest-compat.js';
+  restoreAllMocks,
+  spyOn,
+} from '../../helpers/harness.js';
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreAllMocks();
   resetDependencies();
 });
 
@@ -63,7 +65,7 @@ describe('testing SVGSpriterConfig shape.meta', () => {
     it('should check stat if passed path to the file', () => {
       expect.hasAssertions();
 
-      jest.spyOn(fs, 'lstatSync');
+      spyOn(fs, 'lstatSync');
       // eslint-disable-next-line no-new
       new SVGSpriterConfig({shape: {meta: '.'}});
 
@@ -73,9 +75,9 @@ describe('testing SVGSpriterConfig shape.meta', () => {
     it('should set empty object if stat is not a file', () => {
       expect.hasAssertions();
 
-      jest.spyOn(fs, 'lstatSync').mockReturnValueOnce({
-        isSymbolicLink: jest.fn().mockReturnValueOnce(false),
-        isFile: jest.fn().mockReturnValueOnce(false),
+      spyOn(fs, 'lstatSync').mockReturnValueOnce({
+        isSymbolicLink: createMock().mockReturnValueOnce(false),
+        isFile: createMock().mockReturnValueOnce(false),
       });
 
       const config = new SVGSpriterConfig({shape: {meta: '.'}});
@@ -95,12 +97,12 @@ describe('testing SVGSpriterConfig shape.meta', () => {
         },
       };
 
-      jest.spyOn(fs, 'lstatSync').mockReturnValueOnce({
-        isSymbolicLink: jest.fn().mockReturnValueOnce(false),
-        isFile: jest.fn().mockReturnValueOnce(true),
+      spyOn(fs, 'lstatSync').mockReturnValueOnce({
+        isSymbolicLink: createMock().mockReturnValueOnce(false),
+        isFile: createMock().mockReturnValueOnce(true),
       });
-      jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(TEST_FILE_CONTENTS);
-      const yamlLoad = jest.fn().mockReturnValueOnce(TEST_META);
+      spyOn(fs, 'readFileSync').mockReturnValueOnce(TEST_FILE_CONTENTS);
+      const yamlLoad = createMock().mockReturnValueOnce(TEST_META);
       setDependency('js-yaml:load', yamlLoad);
 
       const config = new SVGSpriterConfig({shape: {meta: '.'}});
@@ -120,12 +122,12 @@ describe('testing SVGSpriterConfig shape.meta', () => {
         [TEST_FILE_NAME]: false,
       };
 
-      jest.spyOn(fs, 'lstatSync').mockReturnValueOnce({
-        isSymbolicLink: jest.fn().mockReturnValueOnce(false),
-        isFile: jest.fn().mockReturnValueOnce(true),
+      spyOn(fs, 'lstatSync').mockReturnValueOnce({
+        isSymbolicLink: createMock().mockReturnValueOnce(false),
+        isFile: createMock().mockReturnValueOnce(true),
       });
-      jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(TEST_FILE_CONTENTS);
-      setDependency('js-yaml:load', jest.fn().mockReturnValueOnce(TEST_META));
+      spyOn(fs, 'readFileSync').mockReturnValueOnce(TEST_FILE_CONTENTS);
+      setDependency('js-yaml:load', createMock().mockReturnValueOnce(TEST_META));
 
       const config = new SVGSpriterConfig({shape: {meta: '.'}});
 
@@ -137,13 +139,13 @@ describe('testing SVGSpriterConfig shape.meta', () => {
 
       const TEST_DEST = '.';
 
-      jest.spyOn(fs, 'readlinkSync').mockReturnValueOnce(TEST_DEST);
-      jest.spyOn(fs, 'statSync').mockReturnValueOnce({
-        isFile: jest.fn().mockReturnValueOnce(false),
+      spyOn(fs, 'readlinkSync').mockReturnValueOnce(TEST_DEST);
+      spyOn(fs, 'statSync').mockReturnValueOnce({
+        isFile: createMock().mockReturnValueOnce(false),
       });
 
-      jest.spyOn(fs, 'lstatSync').mockReturnValueOnce({
-        isSymbolicLink: jest.fn().mockReturnValueOnce(true),
+      spyOn(fs, 'lstatSync').mockReturnValueOnce({
+        isSymbolicLink: createMock().mockReturnValueOnce(true),
       });
 
       // eslint-disable-next-line no-new

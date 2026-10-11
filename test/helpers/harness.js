@@ -1,4 +1,4 @@
-/* eslint-disable node-test/no-export, node-test/prefer-context-mock, unicorn/no-top-level-side-effects -- Test-helper compatibility shim: it must export a jest-compatible API and registers matchers/hooks at load time; the node:test mock is not exposed to a context here. */
+/* eslint-disable node-test/no-export, node-test/prefer-context-mock, unicorn/no-top-level-side-effects -- Test harness helper: it exports the describe/it/expect API used across the suite and registers matchers/hooks at load time; the node:test mock is not exposed to a context here. */
 import {inspect} from 'node:util';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,7 +22,7 @@ const beforeAll = before;
 const afterAll = after;
 
 // ---------------------------------------------------------------------------
-// Mocks (jest.fn / jest.spyOn)
+// Mocks (createMock / spyOn)
 // ---------------------------------------------------------------------------
 function makeMock(implementation) {
   const state = {
@@ -58,7 +58,7 @@ function makeMock(implementation) {
   }
 
   callable._isMockFunction = true;
-  callable.getMockName = () => 'jest.fn()';
+  callable.getMockName = () => 'createMock()';
   callable.mockName = name => {
     callable._mockName = name;
     return callable;
@@ -179,33 +179,18 @@ function spyOn(object, methodName, accessType) {
   return spy;
 }
 
-const jest = {
-  fn: makeMock,
-  spyOn,
-  mocked: value => value,
-  requireActual: () => async () => undefined,
-  clearAllMocks() {
-    while (activeSpies.length > 0) {
-      activeSpies.pop()();
-    }
+/**
+ Restore every function replaced with spyOn() and every node:test mock created
+ during the current test. Mocked functions created with createMock() carry no
+ original implementation and therefore have nothing to restore.
+ */
+function restoreAllMocks() {
+  while (activeSpies.length > 0) {
+    activeSpies.pop()();
+  }
 
-    mock.reset();
-  },
-  resetAllMocks() {
-    while (activeSpies.length > 0) {
-      activeSpies.pop()();
-    }
-
-    mock.reset();
-  },
-  restoreAllMocks() {
-    while (activeSpies.length > 0) {
-      activeSpies.pop()();
-    }
-
-    mock.restoreAll();
-  },
-};
+  mock.restoreAll();
+}
 
 // ---------------------------------------------------------------------------
 // Asymmetric matchers
@@ -797,7 +782,7 @@ expect.extend = matchers => Object.assign(customMatchers, matchers);
 expect.addSnapshotSerializer = () => {};
 
 // ---------------------------------------------------------------------------
-// Custom matchers (from test/jest/setup.js)
+// Custom matchers (visual regression + logger)
 // ---------------------------------------------------------------------------
 expect.extend({
   async toBeVisuallyEqualTo(receivedSVGPath, expectedPNGPath) {
@@ -1033,7 +1018,6 @@ function interpolateTitle(title, values) {
 }
 
 export {
-  jest,
   makeMock,
   expect,
   describe,
@@ -1044,7 +1028,7 @@ export {
   afterAll,
 };
 
-export {makeMock as createMock, spyOn};
+export {makeMock as createMock, spyOn, restoreAllMocks};
 
 export {
   beforeEach, before, afterEach, after,

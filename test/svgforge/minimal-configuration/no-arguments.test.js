@@ -9,7 +9,7 @@ import {
   describe,
   expect,
   it,
-} from '../../helpers/jest-compat.js';
+} from '../../helpers/harness.js';
 
 const cwdWeather = path.join(paths.fixtures, 'svg/single');
 const weather = globSync('**/weather*.svg', {cwd: cwdWeather}).toSorted((a, b) => b.localeCompare(a));
