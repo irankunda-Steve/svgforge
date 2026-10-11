@@ -17,6 +17,8 @@ Newer release notes are published on the GitHub release page: <https://github.co
 ### Changed
 
 * `@resvg/resvg-js` is now declared as a **peer dependency** (installed automatically by default) instead of a regular dependency — no action required. Making it an *optional* peer (never installed automatically) is planned for the next major release; see [docs/TODO.md](docs/TODO.md).
+* The `svgo` shape transformation now offloads SVG optimization to a pool of worker threads (sized to the CPU cores available to the process — detected with `availableParallelism()`, which respects cgroup limits and CPU affinity — minus one, so the main thread keeps a core; overridable via the `SVGFORGE_SVGO_WORKERS` environment variable), so sprite builds scale across cores instead of serializing all optimization on the main thread. The optimization is only offloaded when the SVGO configuration can be transferred to a worker thread; configurations with custom plugin functions or other non-serializable values fall back to in-process optimization automatically.
+* Shapes are now processed concurrently with a core-aware limit (the available CPU cores, with the former four as a floor) instead of a fixed four, so machines with more than four cores keep the SVGO worker pool saturated.
 
 ### Fixed
 

@@ -198,6 +198,10 @@ To call a pre-defined transformation with custom configuration options, use its 
 }
 ```
 
+###### Worker-thread optimization
+
+When the `svgo` transformation runs with the real SVGO optimizer and a configuration that can be transferred to a worker thread, *svgforge* hides the optimization in a small pool of worker threads (one fewer than the CPU cores available to the process, so the main thread keeps a core for parsing and serializing shapes). This lets sprite builds scale across cores instead of serializing all optimization on the main thread. Shapes are processed concurrently with the same core-aware limit. Configurations that contain custom plugin functions or other non-serializable values are optimized in-process as before. Set the `SVGFORGE_SVGO_WORKERS` environment variable to a positive integer to override the pool size (e.g. in containers that report the host's core count instead of their own).
+
 ###### Custom callback transformation (`Function` values)
 
 To use a custom callback for transforming a shape's SVG, pass a function with the following signature:
