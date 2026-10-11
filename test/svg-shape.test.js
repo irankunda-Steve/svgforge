@@ -63,7 +63,7 @@ describe('testing SVGShape initialization', () => {
         path: __dirname,
         contents: Buffer.from(TEST_SVG),
       }), spriter);
-    }).toThrow(new ArgumentError('Invalid SVG file'));
+    }).toThrow(new ArgumentError('Invalid SVG file (some error)'));
     expect(mockFixXMLString).toHaveBeenCalledWith(TEST_SVG);
   });
 

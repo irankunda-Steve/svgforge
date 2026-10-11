@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {renderTemplate} from '../../../../lib/svgforge/utils/template.js';
 import SVGSpriter from '../../../../lib/svgforge.js';
+import {isResvgAvailable} from '../../../../lib/svgforge/utils/index.js';
 import {addFixtureFiles} from '../../../helpers/add-files.js';
 import writeFiles from '../../../helpers/write-files.js';
 import writeFile from '../../../helpers/write-file.js';
@@ -26,6 +27,12 @@ describe.each`
 `('svg-sprite: $name: «defs» mode', ({testConfigKey}) => {
   const testConfig = constants[testConfigKey];
 
+  // Dimension-less icons can only be sized by the optional `@resvg/resvg-js`
+  // fallback. Without it the shapes are skipped, so the visual expectations
+  // only make sense while the fallback is installed (the skip warning itself
+  // is covered by shape.dimension-fallback.test.js).
+  const requiresDimensionFallback = testConfigKey === 'WITHOUT_DIMS' && !isResvgAvailable();
+
   const temporaryPath = path.join(paths.tmp, `defs${testConfig.namespace}`);
 
   let svg;
@@ -33,6 +40,10 @@ describe.each`
   let data;
 
   beforeAll(async () => {
+    if (requiresDimensionFallback) {
+      return;
+    }
+
     await removeTmpPath(temporaryPath);
     data = {};
 
@@ -51,6 +62,13 @@ describe.each`
   });
 
   it('creates a visually correct stylesheet resource in CSS format', async () => {
+    // The visual expectation needs the optional `@resvg/resvg-js` fallback
+    // (see `requiresDimensionFallback`); without it the fixture shapes are
+    // skipped, which is covered by shape.dimension-fallback.test.js.
+    if (requiresDimensionFallback) {
+      return;
+    }
+
     expect.hasAssertions();
 
     data.svg = await readFile(path.join(temporaryPath, 'defs/svg', svg), 'utf8');

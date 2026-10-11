@@ -108,7 +108,7 @@ describe('testing _initSVG()', () => {
 
     expect(() => {
       createShape(TEST_FILE, spriter);
-    }).toThrow(new Error('Invalid SVG file'));
+    }).toThrow(new Error('Invalid SVG file (error)'));
     expect(mockFixXMLString).toHaveBeenCalledWith('s');
   });
 

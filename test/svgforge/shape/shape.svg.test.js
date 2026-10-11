@@ -102,7 +102,7 @@ describe('testing getSVG()', () => {
       base: TEST_FILE.base,
       path: TEST_FILE.path,
       cwd: TEST_FILE.cwd,
-      contents: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" id="abc" height="0" width="0"><use href="#abc"/></svg>'),
+      contents: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" id="abc" height="0" width="0" viewBox="0 0 100 100"><use href="#abc"/></svg>'),
     }), {
       config: {
         shape: {
@@ -123,7 +123,7 @@ describe('testing getSVG()', () => {
     shape.complement(jest.fn);
     shape.setNamespace('ns-');
 
-    expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" id="someprefix-ns-abc" height="0" width="0" viewBox="0 0 0 0"><use href="#someprefix-ns-abc"/></svg>');
+    expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" id="someprefix-ns-abc" height="100" width="100" viewBox="0 0 100 100"><use href="#someprefix-ns-abc"/></svg>');
   });
 
   it('should substitute ID references in xlink:href attributes', () => {
@@ -133,7 +133,7 @@ describe('testing getSVG()', () => {
       base: TEST_FILE.base,
       path: TEST_FILE.path,
       cwd: TEST_FILE.cwd,
-      contents: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="abc" height="0" width="0"><use xlink:href="#abc"/></svg>'),
+      contents: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="abc" height="0" width="0" viewBox="0 0 100 100"><use xlink:href="#abc"/></svg>'),
     }), {
       config: {
         shape: {
@@ -154,7 +154,7 @@ describe('testing getSVG()', () => {
     shape.complement(jest.fn);
     shape.setNamespace('ns-');
 
-    expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="someprefix-ns-abc" height="0" width="0" viewBox="0 0 0 0"><use href="#someprefix-ns-abc"/></svg>');
+    expect(shape.getSVG()).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="someprefix-ns-abc" height="100" width="100" viewBox="0 0 100 100"><use href="#someprefix-ns-abc"/></svg>');
   });
 });
 

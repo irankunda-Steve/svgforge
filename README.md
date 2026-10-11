@@ -62,6 +62,7 @@ For an up-to-date list of browsers supporting [SVG fragment identifiers](https:/
   * [Tweaking and adding output formats](docs/templating.md)
 * [Command line usage](#command-line-usage)
 * [Known problems / To-do](#known-problems--to-do)
+  * [Postponed changes](docs/TODO.md)
 * [Changelog](CHANGELOG.md)
 * [Legal](#legal)
 
@@ -73,6 +74,14 @@ To install *svgforge* in your project, run:
 ```bash
 npm install @svgforge/svgforge
 ```
+
+The [`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js) peer dependency is
+only used for an edge case: SVGs that have **neither** a `viewBox` **nor**
+`width`/`height` attributes — which is unusual, as SVG tools almost always write a
+`viewBox`. Those shapes get their dimensions from rendering the image; if the package is
+unavailable, they are skipped with a logged warning naming the install command
+(`npm install @resvg/resvg-js`). `isResvgAvailable()` (exported from the `utils` entry
+point) reports whether the fallback is available.
 
 
 ## Getting started
@@ -393,6 +402,11 @@ Please refer to the [CLI guide](https://github.com/svgforge/svgforge-cli/docs/co
 ## Known problems / To-do
 
 * SVGO does not minify element IDs when there are `<style>` or `<script>` elements contained in the file
+
+See [`docs/TODO.md`](docs/TODO.md) for changes that are planned but deliberately postponed —
+for example making the optional [`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js)
+dimension fallback an optional peer dependency, which is a breaking change and therefore
+targeted at **4.x**.
 
 
 ## Changelog

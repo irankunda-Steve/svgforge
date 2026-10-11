@@ -112,10 +112,14 @@ Property         | Type      | Default     | Description                |
 `shape.dimension.precision`  | Integer   | `2`       | Precision (number of decimal places) for dimension calculations |
 `shape.dimension.attributes` | Boolean   | `false`     | Whether to add `width` and `height` attributes to embedded shapes («defs» and «stack» mode only) |
 
-SVGs without `width`/`height` or `viewBox` attributes need the optional
-[`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js) package to have their
-dimensions determined. The package is **never installed automatically** — install it
-explicitly when your icon set contains such SVGs.
+SVGs that have **neither** a `viewBox` **nor** `width`/`height` attributes — unusual, as
+SVG tools almost always write a `viewBox` — need the
+[`@resvg/resvg-js`](https://www.npmjs.com/package/@resvg/resvg-js) peer dependency to have
+their dimensions determined by rendering. If it is unavailable (or the rendering fails),
+such shapes are **skipped from the sprite** with a logged warning that points to the
+install command instead of being included with invalid `NaN` viewBox values. Use the
+`isResvgAvailable()` helper (exported from the `utils` entry point) to check whether
+the fallback is active in your runtime.
 
 
 #### Shape spacing

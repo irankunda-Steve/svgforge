@@ -36,4 +36,19 @@ describe('testing fixing svg string', () => {
       fixXMLString('<svg viewBox=></svg>');
     }).toThrow(XmlFixingError);
   });
+
+  it('should keep the generic message and attach the parser error as the cause', () => {
+    let thrown;
+
+    try {
+      fixXMLString('<svg viewBox=></svg>');
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(XmlFixingError);
+    expect(thrown.message).toBe('Invalid XML string');
+    expect(thrown.cause).toBeInstanceOf(Error);
+    expect(thrown.cause.message.length).toBeGreaterThan(0);
+  });
 });
