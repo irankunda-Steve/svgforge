@@ -46,6 +46,7 @@ For an up-to-date list of browsers supporting [SVG fragment identifiers](https:/
 ## Table of contents
 
 * [Installation](#installation)
+* [Development](#development)
 * [Getting started](#getting-started)
   * [Usage pattern](#usage-pattern)
   * [Standard API](docs/api.md)
@@ -82,6 +83,20 @@ only used for an edge case: SVGs that have **neither** a `viewBox` **nor**
 unavailable, they are skipped with a logged warning naming the install command
 (`npm install @resvg/resvg-js`). `isResvgAvailable()` (exported from the `utils` entry
 point) reports whether the fallback is available.
+
+
+## Development
+
+The project requires Node.js 24 or newer. From the repository root, install dependencies
+and run the checks with:
+
+```bash
+pnpm install
+pnpm test
+pnpm lint
+```
+
+Run `pnpm example` to generate a sample sprite in the `tmp/` directory.
 
 
 ## Getting started
